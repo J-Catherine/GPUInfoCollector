@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+message ServerRequest {
+    message Card {
+        string gpu_name = 1;
+        int32 index = 2;
+        int32 temperature = 3;
+        int32 fan_speed = 4;
+        int32 memory_used = 5;
+        int32 memory_total = 6;
+        int32 utilization = 7;
+        string uuid = 8;
+        message Process {
+            string username = 1;
+            string command = 2;
+            int32 gpu_memory_usage = 3;
+            int32 pid = 4;
+        }
+        repeated Process process = 9;
+    }
+    // int32 last_updated = 1;
+    repeated Card cards = 1;
+}
+
+message ServerResponse {
+    string success = 1;
+
+}
+
+service gRPC {
+    rpc GetMessage (ServerRequest) returns (ServerResponse) {}
+}
+
+/*
+********** my print ***********
+ {'name': 'GeForce GTX 1080', 'index': 1, 'temperature': 59, 'fan_speed': 0, 'memory_used': 1261,
+ 'memory_total': 8119, 'utilization': 0, 'uuid': 'GPU-0082f32d-c88b-35be-e7c6-059e07f79a90',
+ 'processes': [{'username': 'competition', 'command': 'python', 'gpu_memory_usage': 1251, 'pid': 23444}]}
+*/
