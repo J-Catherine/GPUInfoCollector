@@ -74,12 +74,12 @@ def page_not_found(_):
 
 @manager.command
 def run():
-    app.run(port=8997, host='10.141.221.112', debug=False)
+    app.run(port=8997, host='0.0.0.0', debug=False)
 
 
 @manager.command
 def dev():
-    app.run(port=18997, host='10.141.221.112', debug=True)
+    app.run(port=18997, host='0.0.0.0', debug=True)
 
 
 if __name__ == '__main__':
