@@ -37,22 +37,13 @@ def update_with_screen(work_servers, kill=False):
             expect "*password:*"
             send "{data[2]}\\r"
             expect "*]#"
-            send "screen -S nvidia_reporter -X quit\\r"
+            send "screen -S gpu_reporter -X quit\\r"
             expect "*]#"
-            send "rm -rf .nvidia_reporter{data[0][-3:]}/\\r"\n"""
+            """
             if not kill:
-                cmd += f"""expect "*]#"
-                send "mkdir .nvidia_reporter\\r"
+                cmd += f"""send "screen -S gpu_reporter\\r"
                 expect "*]#"
-                send "cd .nvidia_reporter\\r"
-                expect "*]#"
-                send "wget http://{base_url}/reporter\\r"
-                expect "*]#"
-                send "mv reporter reporter.py\\r"
-                expect "*]#"
-                send "screen -S nvidia_reporter\\r"
-                expect "*]#"
-                send "python reporter.py {base_url}\\r"
+                send "gpustat -r {base_url}\\r"
                 expect "*]#"
                 send "exit\\r"
                 expect eof"""
@@ -67,8 +58,8 @@ if __name__ == "__main__":
     if err > 0:
         print("Can't get the IP address.")
     else:
-        base_url = ip + ':8997'
-        args = docopt.docopt(__doc__, version='GPU Info Controller v1.1')
+        base_url = ip
+        args = docopt.docopt(__doc__, version='GPU Info Controller v2.0')
         if args['--start']:
             update_with_screen(args['<file>'])
         elif args['--kill']:
