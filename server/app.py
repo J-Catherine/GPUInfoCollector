@@ -38,11 +38,15 @@ def read_info():
             for r in results:
                 if r['index'] not in result:
                     del r['_id']
-                    r['time'] = (r['time'] + datetime.timedelta(hours=8)).strftime("%Y-%m-%d %H:%M:%S")
                     result[r['index']] = r
                 else:
                     break
-            d[ip] = [result[r] for r in sorted(result.keys())]
+            for r in result.keys():
+                if datetime.datetime.utcnow() - result[r]['time'] > datetime.timedelta(minutes=5):
+                    result[r] = []
+                else:
+                    result[r]['time'] = (result[r]['time'] + datetime.timedelta(hours=8)).strftime("%Y-%m-%d %H:%M:%S")
+            d[ip] = [result[r] for r in sorted(result.keys()) if len(result[r]) > 0]
     with open("../data/record.json", 'w') as f:
         json.dump(d, f)
 
